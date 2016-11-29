@@ -17,7 +17,7 @@ Use a slice of ints to sort a slice of strings:
 	
 	names := []string{"Amy","Bob","Carla","Dan"}
 	ageIndex := []int{32,56,19,24}
-	idxsort.SortIndexed(sort.IntSlice(ageIndex), true, sort.StringSlice(names))
+	idxsort.SortAsc(sort.IntSlice(ageIndex), sort.StringSlice(names).Swap)
 
 sort.IntSlice and sort.StringSlice attach the methods of sort.Interface to slices of basic ints and strings.  Slice 'ageIndex' is then sorted by ascending value, with index swaps mirrored in slice 'names'.
 
@@ -29,7 +29,7 @@ The linked sequence does not have to implement all of the methods of sort.Interf
 		people[i], people[j] = people[j], people[i]
 	}
 	ageIndex := []int{32,56,19,24}
-	idxsort.SortWithIndex(sort.IntSlice(ageIndex), true, swapPeople)
+	idxsort.SortAsc(sort.IntSlice(ageIndex), swapPeople)
 
 Again, 'ageIndex' is sorted by ascending value and index swaps are mirrored in slice 'people' via the 'swapPeople' closure.
 

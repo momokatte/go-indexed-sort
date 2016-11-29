@@ -1,19 +1,30 @@
+/*
+Package idxsort provides types and functions for sorting sequences via separate indexes.
+*/
 package idxsort
 
 import (
 	"sort"
 )
 
+/*
+IndexedSorter wraps a sequence implementing the sort.Interface interface, supports ascending and descending sort, and duplicates index swaps to other sequences via provided swap functions.
+
+IndexedSorter implements the sort.Interface interface.
+*/
 type IndexedSorter struct {
 	index     sort.Interface
-	swapFuncs []func(i, j int)
+	swapFunc  func(i, j int)
 	ascending bool
 }
 
-func NewIndexedSorter(index sort.Interface, swapFuncs ...func(i, j int)) (s *IndexedSorter) {
+/*
+NewIndexedSorter instantiates a new IndexedSorter with the provided index and swap functions.
+*/
+func NewIndexedSorter(index sort.Interface, swapFunc func(i, j int)) (s *IndexedSorter) {
 	s = &IndexedSorter{
 		index:     index,
-		swapFuncs: swapFuncs,
+		swapFunc:  swapFunc,
 		ascending: true,
 	}
 	return
@@ -38,9 +49,7 @@ func (s *IndexedSorter) Len() int {
 
 func (s *IndexedSorter) Swap(i, j int) {
 	s.index.Swap(i, j)
-	for _, swapFunc := range s.swapFuncs {
-		swapFunc(i, j)
-	}
+	s.swapFunc(i, j)
 }
 
 func (s *IndexedSorter) Less(i, j int) bool {
@@ -51,61 +60,15 @@ func (s *IndexedSorter) Less(i, j int) bool {
 	}
 }
 
-func SortWithIndex(index sort.Interface, ascending bool, swapFuncs ...func(i, j int)) {
-	sis := NewIndexedSorter(index, swapFuncs...)
-	sis.Sort(ascending)
+func Sort(index sort.Interface, ascending bool, swapFunc func(i, j int)) {
+	sorter := NewIndexedSorter(index, swapFunc)
+	sorter.Sort(ascending)
 }
 
-func SortIndexed(index sort.Interface, ascending bool, linked sort.Interface) {
-	SortWithIndex(index, ascending, linked.Swap)
+func SortAsc(index sort.Interface, swapFunc func(i, j int)) {
+	Sort(index, true, swapFunc)
 }
 
-func SortIndexedInts(index sort.Interface, ascending bool, is []int) {
-	linked := sort.IntSlice(is)
-	SortWithIndex(index, ascending, linked.Swap)
-}
-
-func SortIndexedInt64s(index sort.Interface, ascending bool, is []int64) {
-	linked := Int64Slice(is)
-	SortWithIndex(index, ascending, linked.Swap)
-}
-
-func SortIndexedUint64s(index sort.Interface, ascending bool, is []uint64) {
-	linked := Uint64Slice(is)
-	SortWithIndex(index, ascending, linked.Swap)
-}
-
-func SortIndexedFloat64s(index sort.Interface, ascending bool, fs []float64) {
-	linked := sort.Float64Slice(fs)
-	SortWithIndex(index, ascending, linked.Swap)
-}
-
-func SortIndexedStrings(index sort.Interface, ascending bool, ss []string) {
-	linked := sort.StringSlice(ss)
-	SortWithIndex(index, ascending, linked.Swap)
-}
-
-func SortWithIntIndex(index []int, ascending bool, swapFuncs ...func(i, j int)) {
-	sis := NewIndexedSorter(sort.IntSlice(index), swapFuncs...)
-	sis.Sort(ascending)
-}
-
-func SortWithInt64Index(index []int64, ascending bool, swapFuncs ...func(i, j int)) {
-	sis := NewIndexedSorter(Int64Slice(index), swapFuncs...)
-	sis.Sort(ascending)
-}
-
-func SortWithUint64Index(index []uint64, ascending bool, swapFuncs ...func(i, j int)) {
-	sis := NewIndexedSorter(Uint64Slice(index), swapFuncs...)
-	sis.Sort(ascending)
-}
-
-func SortWithFloat64Index(index []float64, ascending bool, swapFuncs ...func(i, j int)) {
-	sis := NewIndexedSorter(sort.Float64Slice(index), swapFuncs...)
-	sis.Sort(ascending)
-}
-
-func SortWithStringIndex(index []string, ascending bool, swapFuncs ...func(i, j int)) {
-	sis := NewIndexedSorter(sort.StringSlice(index), swapFuncs...)
-	sis.Sort(ascending)
+func SortDesc(index sort.Interface, swapFunc func(i, j int)) {
+	Sort(index, false, swapFunc)
 }

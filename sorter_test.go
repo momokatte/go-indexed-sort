@@ -1,6 +1,7 @@
 package idxsort
 
 import (
+	"sort"
 	"testing"
 )
 
@@ -71,7 +72,7 @@ func TestStringThingSort(t *testing.T) {
 	swapThings := func(i, j int) {
 		things[i], things[j] = things[j], things[i]
 	}
-	SortWithStringIndex(ss, false, swapThings)
+	SortDesc(sort.StringSlice(ss), swapThings)
 
 	expectedStrings := []string{"zero", "two", "three", "one", "four", "five"}
 
@@ -109,7 +110,7 @@ func TestIntThingSort(t *testing.T) {
 	swapThings := func(i, j int) {
 		things[i], things[j] = things[j], things[i]
 	}
-	SortWithIntIndex(is, false, swapThings)
+	SortDesc(sort.IntSlice(is), swapThings)
 
 	expectedInts := []int{5, 4, 3, 2, 1, 0}
 
