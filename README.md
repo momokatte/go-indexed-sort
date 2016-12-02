@@ -13,15 +13,7 @@ I will tag a 1.0 release when I am satisfied with usability and test coverage.
 
 # Usage
 
-Use a slice of ints to sort a slice of strings:
-	
-	names := []string{"Amy","Bob","Carla","Dan"}
-	ageIndex := []int{32,56,19,24}
-	idxsort.SortAsc(sort.IntSlice(ageIndex), sort.StringSlice(names).Swap)
-
-sort.IntSlice and sort.StringSlice attach the methods of sort.Interface to slices of basic ints and strings.  Slice 'ageIndex' is then sorted by ascending value, with index swaps mirrored in slice 'names'.
-
-The linked sequence does not have to implement all of the methods of sort.Interface; it is also possible to use a closure with the sort.Interface.Swap signature:
+Use a slice of ints to sort a slice of structs:
 
 	var people []Person
 	// ... populate with 4 people ...
@@ -31,7 +23,13 @@ The linked sequence does not have to implement all of the methods of sort.Interf
 	ageIndex := []int{32,56,19,24}
 	idxsort.SortAsc(sort.IntSlice(ageIndex), swapPeople)
 
-Again, 'ageIndex' is sorted by ascending value and index swaps are mirrored in slice 'people' via the 'swapPeople' closure.
+sort.IntSlice attaches the methods of sort.Interface to 'ageIndex'. Slice 'ageIndex' is then sorted by ascending value, with index swaps duplicated in slice 'people' by the 'swapPeople' closure.
+
+If your linked sequence implements sort.Interface, you can use its Swap function:
+
+	names := []string{"Amy","Bob","Carla","Dan"}
+	ageIndex := []int{32,56,19,24}
+	idxsort.SortAsc(sort.IntSlice(ageIndex), sort.StringSlice(names).Swap)
 
 
 ## Online GoDoc
