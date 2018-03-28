@@ -10,7 +10,7 @@ Int64Slice attaches the methods of Interface to []int64, sorting in increasing o
 type Int64Slice []int64
 
 func (s Int64Slice) Len() int {
-	return s.Len()
+	return len(s)
 }
 
 func (s Int64Slice) Swap(i, j int) {
@@ -34,7 +34,7 @@ Uint64Slice attaches the methods of Interface to []uint64, sorting in increasing
 type Uint64Slice []uint64
 
 func (s Uint64Slice) Len() int {
-	return s.Len()
+	return len(s)
 }
 
 func (s Uint64Slice) Swap(i, j int) {
